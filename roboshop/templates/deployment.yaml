@@ -85,9 +85,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-
        volumes:
          name: param-volume
-         hostPath:
-           path: /data
-           type: Directory
+         emptyDir:
+           sizeLimit: 500Mi
