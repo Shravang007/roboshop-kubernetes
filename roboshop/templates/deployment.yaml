@@ -35,7 +35,7 @@ spec:
           env:
             - name: PARAMETERS
               value: { { .Values.PARAMETERS } }
-          volumeMounts:
+          volumeMounts :
             - mountPath: /data
               name: param-volume
         { { - if .Values.schemaInitContainer.enabled } }
