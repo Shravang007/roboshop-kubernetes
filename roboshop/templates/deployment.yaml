@@ -14,7 +14,7 @@ spec:
   template:
     metadata:
       {{- with .Values.podAnnotations }}
-    annotations:
+      annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
@@ -27,29 +27,27 @@ spec:
       serviceAccountName: {{ .Values.component }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-
       initContainers:
         - name: aws-params
           image: 752442278108.dkr.ecr.us-east-1.amazonaws.com/aws-parameter-init-container:latest
           imagePullPolicy: Always
           env:
             - name: PARAMETERS
-              value: { { .Values.PARAMETERS } }
-      volumeMounts:
-          - mountPath: /data
-            name: param-volume
-        { { - if .Values.schemaInitContainer.enabled } }
-          - name: schema-load
-          image: 752442278108.dkr.ecr.us-east-1.amazonaws.com/schema-load-init-container:latest
-          imagePullPolicy: Always
-          env:
-            - name: PARAMETERS
-              value: { { .Values.PARAMETERS } }
+              value: {{ .Values.PARAMETERS }}
           volumeMounts:
             - mountPath: /data
               name: param-volume
-        { { - end } }
-
+      {{- if .Values.schemaInitContainer.enabled }}
+      - name: schema-laod
+        image: 752442278108.dkr.ecr.us-east-1.amazonaws.com/schema-load-init-container:latest
+        imagePullPolicy: Always
+        env:
+          - name: PARAMETERS
+            value: {{ .Values.PARAMETERS }}
+        volumeMounts:
+          - mountPath: /data
+            name: param-volume
+      {{- end }}
       containers:
         - name: {{ .Values.component }}
           securityContext:
@@ -71,8 +69,8 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            -mountPath: /data
-            name: param-volume
+            - mountPath: /data
+              name: param-volume
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -85,7 +83,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-       volumes:
-         name: param-volume
-         emptyDir:
-           sizeLimit: 500Mi
+      volumes:
+        - name: param-volume
+          emptyDir:
+            sizeLimit: 500Mi
