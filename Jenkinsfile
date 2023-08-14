@@ -5,7 +5,7 @@ pipeline {
         }
     }
     parameters {
-        string(name: 'COMPONENT', defaultValue: '', description: 'Which Component')
+        string(name: 'COMPONENT', defaultValue: 'frontend', description: 'Which Component')
         string(name: 'ENV', defaultValue: 'prod', description: 'Which Env')
         string(name: 'APP_VERSION', defaultValue: '2.0.0', description: 'Which Version')
     }
