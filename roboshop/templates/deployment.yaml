@@ -38,7 +38,7 @@ spec:
             - mountPath: /data
               name: param-volume
       {{- if .Values.schemaInitContainer.enabled }}
-      - name: schema-load
+      - name: schema-laod
         image: 752442278108.dkr.ecr.us-east-1.amazonaws.com/schema-load-init-container:latest
         imagePullPolicy: Always
         env:
