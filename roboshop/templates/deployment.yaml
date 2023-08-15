@@ -27,28 +27,28 @@ spec:
       serviceAccountName: {{ .Values.component }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-  initContainers:
-    - name: aws-params
-      image: 752442278108.dkr.ecr.us-east-1.amazonaws.com/aws-parameter-init-container:latest
-      imagePullPolicy: Always
-      env:
-        - name: PARAMETERS
-          value: { { .Values.PARAMETERS } }
-      volumeMounts:
-        - mountPath: /data
-          name: param-volume
-    { { - if .Values.schemaInitContainer.enabled } }
-    - name: schema-load  # Corrected indentation
-      image: 752442278108.dkr.ecr.us-east-1.amazonaws.com/schema-load-init-container:latest
-      imagePullPolicy: Always
-      env:
-        - name: PARAMETERS
-          value: { { .Values.PARAMETERS } }
-      volumeMounts:
-        - mountPath: /data
-          name: param-volume
-    { { - end } }
-    containers:
+      initContainers:
+        - name: aws-params
+          image: 752442278108.dkr.ecr.us-east-1.amazonaws.com/aws-parameter-init-container:latest
+          imagePullPolicy: Always
+          env:
+            - name: PARAMETERS
+              value: {{ .Values.PARAMETERS }}
+          volumeMounts:
+            - mountPath: /data
+              name: param-volume
+        {{- if .Values.schemaInitContainer.enabled }}
+        - name: schema-load
+          image: 752442278108.dkr.ecr.us-east-1.amazonaws.com/schema-load-init-container:latest
+          imagePullPolicy: Always
+          env:
+            - name: PARAMETERS
+              value: {{ .Values.PARAMETERS }}
+          volumeMounts:
+            - mountPath: /data
+              name: param-volume
+        {{- end }}
+      containers:
         - name: {{ .Values.component }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
