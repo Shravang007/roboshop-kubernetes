@@ -32,8 +32,8 @@ spec:
           image: 752442278108.dkr.ecr.us-east-1.amazonaws.com/aws-parameter-init-container:latest
           imagePullPolicy: Always
           env:
-        - name: PARAMETERS
-          value: {{ .Values.PARAMETERS }}
+            - name: PARAMETERS
+              value: {{ .Values.PARAMETERS }}
           volumeMounts:
             - mountPath: /data
               name: param-volume
